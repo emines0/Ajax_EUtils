@@ -1,5 +1,10 @@
 var Ajax_EUtils = Class.create();
 Ajax_EUtils.prototype = Object.extendsObject(AbstractAjaxProcessor, {
+  /**
+   * @function isPublic - Check if script include is public
+   * @returns - true - if script include is public then it can be accessed from client script
+   */
+
   isPublic: function () {
     return true;
   },
