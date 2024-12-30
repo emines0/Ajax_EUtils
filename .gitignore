@@ -1,7 +1,3 @@
-/autocomplete
-/autocomplete/*
-
-/background
-/background/*
-
-jsconfig.json
+*
+!Ajax_EUtils.script.js
+!README.MD

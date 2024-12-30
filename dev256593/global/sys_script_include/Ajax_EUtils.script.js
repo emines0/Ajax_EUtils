@@ -195,5 +195,40 @@ Ajax_EUtils.prototype = Object.extendsObject(AbstractAjaxProcessor, {
     }
   },
 
+  amountFormatting: function () {
+    /**
+     * @function amountFormatting - Format amount to currency, add thousand separator and set decimal places to 2
+     * @param sysparm_amount - Amount you want to format in client script
+     * @var amount - Amount you want to format
+     * @var amountStr - Formated amount in case of comma decimal separator
+     * @var formattedAmount - Formated amount with dot decimal separator and 2 decimal places
+     * @returns - JSON.stringify(result) - Formated amount
+     */
+
+    var amount = this.getParameter("sysparm_amount").toString();
+    var result = "";
+
+    // Replace a comma decimal separator with a dot for uniformity
+    amountStr = amount.replace(",", ".");
+
+    // Ensure the resulting string is a valid number
+    if (isNaN(amountStr)) {
+      return "Invalid input";
+    }
+
+    // Convert the amount to a fixed 2 decimal places string
+    var formattedAmount = parseFloat(amountStr).toFixed(2);
+
+    // Replace the decimal separator from "." to ","
+    formattedAmount = formattedAmount.replace(".", ",");
+
+    // Add thousand separators using a regular expression
+    formattedAmount = formattedAmount.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+
+    result = formattedAmount;
+
+    return JSON.stringify(result);
+  },
+
   type: "Ajax_EUtils",
 });
