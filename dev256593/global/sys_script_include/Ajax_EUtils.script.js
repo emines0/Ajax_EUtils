@@ -63,7 +63,7 @@ Ajax_EUtils.prototype = Object.extendsObject(AbstractAjaxProcessor, {
      * @returns - JSON.stringify(result) - true if inputString contains only numbers, false if inputString contains anything else
      */
 
-    var inputString = this.getParameter("sysparm_input_string").toString();
+    var inputString = this.getParameter("sysparm_input_str").toString();
     var result = false;
 
     if (/^\d+$/.test(inputString)) {
@@ -200,6 +200,7 @@ Ajax_EUtils.prototype = Object.extendsObject(AbstractAjaxProcessor, {
      * @function amountFormatting - Format amount to currency, add thousand separator and set decimal places to 2
      * @param sysparm_amount - Amount you want to format in client script
      * @var amount - Amount you want to format
+     * @var regex - 2 decimal places, thousand separator is dot, decimal separator is comma
      * @var amountStr - Formated amount in case of comma decimal separator
      * @var formattedAmount - Formated amount with dot decimal separator and 2 decimal places
      * @returns - JSON.stringify(result) - Formated amount
@@ -207,13 +208,19 @@ Ajax_EUtils.prototype = Object.extendsObject(AbstractAjaxProcessor, {
 
     var amount = this.getParameter("sysparm_amount").toString();
     var result = "";
+    var regex = /^\d{1,3}(\.\d{3})*(,\d{2})?$/; //
+
+    //Prevent to do formatting more then once if onChange is triggered multiple times
+    if (regex.test(amount)) {
+      return amount;
+    }
 
     // Replace a comma decimal separator with a dot for uniformity
     amountStr = amount.replace(",", ".");
 
     // Ensure the resulting string is a valid number
-    if (isNaN(amountStr)) {
-      return "Invalid input";
+    if (isNaN(parseFloat(amountStr))) {
+      return false;
     }
 
     // Convert the amount to a fixed 2 decimal places string
